@@ -8,14 +8,17 @@ deny from all
 RewriteEngine on
 RewriteBase /PHP/MyLog/
 
-RewriteRule ^account$ index.php [L]
-RewriteRule ^account/signin$ signin_signup_confirm.php?state=signin [L]
-RewriteRule ^account/signup$ signin_signup_confirm.php?state=signup [L]
+
+RewriteRule ^account$ app_account.php [L]
+RewriteRule ^welcome$ welcome.php [L]
+RewriteRule ^signin$ index.php?q=signin [L]
+
 RewriteRule ^home$ index.php [L]
 RewriteRule ^post$ post.php [L]
 
+
 # Testing
-RewriteRule ^demo$ controller/SecurityController.php [L]
+RewriteRule ^demo$ test/hash.php [L]
 
 
 # Error document

@@ -3,6 +3,11 @@
 namespace App\Model;
 
 use \PDO;
+use \PDOException;
+use App\Model\Database;
+
+require_once 'model/abs/Database.php';
+
 
 abstract class MySqlDatabase implements Database
 {
@@ -13,7 +18,11 @@ abstract class MySqlDatabase implements Database
   private $password;
 
 
-  function __construct($host, $database_name, $username, $password)
+  function __construct (
+    $host = 'localhost',
+    $database_name = 'mylog',
+    $username = 'root',
+    $password = 'root')
   {
     $this->host = $host;
     $this->database_name = $database_name;
@@ -29,6 +38,7 @@ abstract class MySqlDatabase implements Database
       // set the PDO error mode to exception
       $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
       $this->connection = $conn;
+
     } catch(PDOException $e) {
       echo "System failed error!";
     }
@@ -37,7 +47,6 @@ abstract class MySqlDatabase implements Database
 
   function disconnect()
   {
-    echo "<br> Disconnected MySql DB. <br> <br>";
     $this->connection = null;
   }
 

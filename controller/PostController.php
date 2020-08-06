@@ -19,7 +19,7 @@ class PostController extends ViewController
 
   private function createDBController()
   {
-    return new DBController(new Post('localhost', 'mylog', 'root', 'root'));
+    return DBController::getDBInstance(new Post());
   }
 
 
@@ -28,9 +28,10 @@ class PostController extends ViewController
     $this->setView("view/", "Post.php");
 
     if (!$this->template instanceof Template) {
-      $this->template = new Template("Post Page", $this->getView());
+      $template = Template::getInstance("Post Page", $this->getView());
     }
-    $this->template->setTemplate();
+    
+    $template->setTemplate();
   }
 
 

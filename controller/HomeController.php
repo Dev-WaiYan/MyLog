@@ -18,10 +18,11 @@ class HomeController extends ViewController
     $this->setView("view/", "Home.php");
     
     if (!$this->template instanceof Template) {
-      $this->template = new Template("Home Page", $this->getView());
+      $template = Template::getInstance("Home Page", $this->getView());
     }
     
-    $this->template->setTemplate();
+    $template->setTemplate();
+    
   }
 
 }

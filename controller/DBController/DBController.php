@@ -3,24 +3,22 @@
 namespace App\Controller;
 
 use App\Model\Database;
-use App\Controller\SecurityController;
 use App\Controller\Security;
 
 require_once 'model/abs/Database.php';
-require_once 'controller/Security.php';
-require_once 'controller/SecurityController.php';
+require_once 'controller/utility/Security.php';
 
 
-class DBController
+abstract class DBController
 {
 
-  private $database;
-  private $security;
+  protected $database;
+  protected $security;
 
 
-  function __construct(Database $database)
+  protected function __construct(Database $database)
   {
-    $this->security = new Security(new SecurityController());
+    $this->security = Security::getInstance();
 
     $this->database = $database;
     $this->database->connect();
@@ -29,11 +27,8 @@ class DBController
 
   function create($data)
   {
-    foreach ($data as $k => $v) {
-      $data[$k] = $this->security->preventXSS($data[$k]);
-    }
-
-    $this->database->create($data);
+    $this->security->preventXSS($data);
+    return $this->database->create($data);
   }
 
 
@@ -51,13 +46,14 @@ class DBController
 
   function selectOne($id)
   {
-
+    return $this->database->selectOne($id);
   }
 
 
-  function update($id)
+  function update($data)
   {
-
+    $this->security->preventXSS($data);
+    return $this->database->update($data);
   }
 
 
@@ -69,7 +65,7 @@ class DBController
 
   function deleteOne($id)
   {
-
+    return $this->database->deleteOne($id);
   }
 
 

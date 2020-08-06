@@ -1,10 +1,50 @@
+<?php
+
+use App\Controller\UserAccountController;
+
+require_once 'controller/UserAccountController.php';
+
+
+$error = null;
+
+if (isset($_POST['btn_submit'])) {
+  $state = htmlspecialchars($_GET['confirm_state']);
+
+  $controller = UserAccountController::getInstance();
+
+  if ($state == 'signin') {
+    die("Sign IN");
+  }
+
+  if ($state == 'signup') {
+    $data = array(
+      'user_email'=>$_POST['user_email'],
+      'user_password'=>$_POST['user_password']
+    );
+
+    try {
+      $controller->createAccount($data);
+      header('Location: ../welcome');
+      exit();
+    } catch (\Exception $e) {
+      $error = $e->getMessage();
+    }
+
+  }
+
+  $controller = null;
+
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
@@ -17,7 +57,30 @@
   <body>
 
     <?php
-      $state = htmlspecialchars($_GET['state']);
+      if (!empty($error)) {
+    ?>
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-2">
+        </div>
+        <div class="col-sm-8">
+          <div class="alert alert-danger alert-dismissible my-2">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <small><?php echo $error; ?></small>
+          </div>
+        </div>
+        <div class="col-sm-2">
+        </div>
+      </div>
+    </div>
+    <?php
+      }
+    ?>
+
+    <?php
+
+      if (isset($_GET['state']))
+        $state = htmlspecialchars($_GET['state']);
 
       if (isset($state) && $state == 'signup') { ?>
 
@@ -47,7 +110,7 @@
 
           <div class="row">
             <div class="col-12 text-center">
-              <p class="text-secondary py-2"><a href="account?state=signin"><u>Signin</u></a></p>
+              <p class="text-secondary py-2"><a href="account/signin"><u>Signin</u></a></p>
             </div>
           </div>
         </div>
@@ -84,7 +147,7 @@
 
         <div class="row">
           <div class="col-12 text-center">
-            <p class="text-secondary py-2"><a href="account?state=signup"><u>Signup</u></a></p>
+            <p class="text-secondary py-2"><a href="account/signup"><u>Signup</u></a></p>
           </div>
         </div>
       </div>

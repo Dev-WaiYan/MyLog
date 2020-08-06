@@ -3,6 +3,7 @@
 namespace App\Model;
 
 use \PDO;
+use \PDOException;
 
 require_once 'MySqlDatabase.php';
 require_once 'abs/DBColumnOrderSelect.php';
@@ -26,7 +27,7 @@ class Post extends MySqlDatabase implements DBColumnOrderSelect
 
       $stmt->execute();
     } catch(PDOException $e) {
-      echo "Process failed!" . $e->getMessage();
+      die("Process failed!" . $e->getMessage());
     }
 
   }

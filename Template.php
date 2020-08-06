@@ -16,10 +16,21 @@ require_once 'controller/UserAccountController.php';
 class Template
 {
   private $content;
+  private static $instance;
 
-  function __construct($title, $body)
+  private function __construct($title, $body)
   {
     $this->content = array('title' => $title, 'body' => $body);
+  }
+
+
+  public static function getInstance($page, $view)
+  {
+    if (self::$instance == null) {
+      self::$instance = new Template($page, $view);
+    }
+
+    return self::$instance;
   }
 
 
@@ -40,7 +51,7 @@ class Template
   function setTemplate()
   {
     // Every user must have an account and login.
-    $controller = new UserAccountController("app_token");
+    $controller = UserAccountController::getInstance();
     if (!$controller->isLoginUser()) {
       $this->showLoginPage();
       return 1;
@@ -53,10 +64,7 @@ class Template
 
   function showLoginPage()
   {
-    if (!isset($_GET['state'])) {
-      $_GET['state'] = 'signin';
-    }
-    require_once 'signin_signup.php';
+    require_once 'app_account.php';
   }
 
 
